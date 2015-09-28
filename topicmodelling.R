@@ -1,3 +1,4 @@
+
 library(jsonlite)
 library(plyr)
 library(tm)
@@ -11,11 +12,11 @@ dat <- plyr::rbind.fill(dat$pages$results)
 
 corpus <- tm::Corpus(tm::VectorSource(dat$text))
 
-corpus.clean <- tm_map(corpus, content_transformer(tolower), lazy = T)
-corpus.clean <- tm_map(corpus.clean, content_transformer(removePunctuation), lazy = T)
-corpus.clean <- tm_map(corpus.clean, content_transformer(removeNumbers), lazy = T)
-corpus.clean <- tm_map(corpus.clean, content_transformer(removeWords), stopwords('english'), lazy = T)
-corpus.clean <- tm_map(corpus.clean, content_transformer(stripWhitespace), lazy = T)
+corpus.clean <- tm::tm_map(corpus, content_transformer(tolower), lazy = T)
+corpus.clean <- tm::tm_map(corpus.clean, content_transformer(removePunctuation), lazy = T)
+corpus.clean <- tm::tm_map(corpus.clean, content_transformer(removeNumbers), lazy = T)
+corpus.clean <- tm::tm_map(corpus.clean, content_transformer(removeWords), stopwords('english'), lazy = T)
+corpus.clean <- tm::tm_map(corpus.clean, content_transformer(stripWhitespace), lazy = T)
 
 dtm <- tm::DocumentTermMatrix(corpus.clean)
 
@@ -23,9 +24,10 @@ dtm <- tm::DocumentTermMatrix(corpus.clean)
 tfidf.scores <- colSums(as.matrix(tm::weightTfIdf(dtm)))
 dtm <- dtm[,tfidf.scores > quantile(tfidf.scores, 0.2)]
 
+# convert to matrix to allow row and column sums to be calculated
 td.mat <- as.matrix(dtm)
 
-topic.no <- 15
+topic.no <- 20
 
 lda <- topicmodels::LDA(dtm, k = topic.no, method = "Gibbs")
 
