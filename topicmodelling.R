@@ -15,19 +15,20 @@ corpus <- tm::Corpus(tm::VectorSource(dat$text))
 corpus.clean <- tm::tm_map(corpus, content_transformer(tolower), lazy = T)
 corpus.clean <- tm::tm_map(corpus.clean, content_transformer(removePunctuation), lazy = T)
 corpus.clean <- tm::tm_map(corpus.clean, content_transformer(removeNumbers), lazy = T)
-corpus.clean <- tm::tm_map(corpus.clean, content_transformer(removeWords), stopwords('english'), lazy = T)
+corpus.clean <- tm::tm_map(corpus.clean, content_transformer(removeWords), stopwords('english'))
 corpus.clean <- tm::tm_map(corpus.clean, content_transformer(stripWhitespace), lazy = T)
+corpus.clean <- tm::tm_map(corpus.clean, content_transformer(removeWords), stopwords('english'))
 
 dtm <- tm::DocumentTermMatrix(corpus.clean)
 
 # filter out low scoring tf-idf terms
 tfidf.scores <- colSums(as.matrix(tm::weightTfIdf(dtm)))
-dtm <- dtm[,tfidf.scores > quantile(tfidf.scores, 0.2)]
+dtm <- dtm[,tfidf.scores > quantile(tfidf.scores, 0.4)]
 
 # convert to matrix to allow row and column sums to be calculated
 td.mat <- as.matrix(dtm)
 
-topic.no <- 20
+topic.no <- 28
 
 lda <- topicmodels::LDA(dtm, k = topic.no, method = "Gibbs")
 
