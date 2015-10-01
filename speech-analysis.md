@@ -11,6 +11,6 @@ The algorithm I'll demonstrate here is something called *Latent Dirichlet Alloca
 
 A key feature of the algorithm is that it requires no information on the collection of documents being studied - it simply looks at the distribution of terms and groups them together in to as many topics as you specify up front. The output is then a list of terms for each topic, but with no labels - the algorithm doesn't know what a topic should be called, as it doesn't really care about the actual words used!
 
-To demonstrate, I've downloaded all of the official speeches published by No.10 during the coalition years (2010-2015) from data.gov (I used import.io for the data retrieval). There are over 400 speeches, covering a huge range of topics, and often multiple topics are discussed within a single speech.
+To demonstrate, I've downloaded all of the official speeches published by No.10 during the coalition years (2010-2015) from data.gov (see [here](https://www.gov.uk/government/announcements?keywords=&announcement_type_option=speeches&topics%5B%5D=all&departments%5B%5D=prime-ministers-office-10-downing-street), using [import.io](import.io) for the data retrieval. There are over 400 speeches, covering a huge range of topics, and often multiple topics are discussed within a single speech.
 
 Below is a visualisation of the output of a 28 topic model run on the speeches. Before going any further, first set the slider at the top right of the visualisation to 0.6. This
