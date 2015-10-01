@@ -3,14 +3,28 @@
 
 Computational text analysis is a rapidly growing field of research that promises to extract meaningful information from one of the most abundant and fundamentally unstructured data sources that humans produce.
 
-Traditionally, to understand a large body of text you had to read it - getting computers to to do the reading for you is not only quicker, but can also find new patterns in the structure of the text that you wouldn't find through reading.
+Traditionally, to understand a large body of text you had to read it - getting computers to do the reading for you is not only (alot) quicker, but can also uncover hidden patterns in the structure of the text that you wouldn't find through reading.
 
-One such method of text analysis is **topic modelling**, which seeks to tell you what underlying topics are being discussed in a collection of texts. In this context, a topic is just a collection of words that are related - for example, the words *car*, *train*, *boat* and *plane* could all be members of a topic called "*transport*". Similarly, you could have another topic, "*exercise*", that contains the words *run*, *marathon* and *train*. Notice that the word *train* appears in both topics: this is a feature of topic modeling - it allows terms to be included in multiple topics.
+One such method of text analysis is **topic modelling**, which seeks to tell you what underlying topics are being discussed in a collection of texts. In this context, a topic is just a collection of words that are related - for example, the words *car*, *train*, *boat* and *plane* could all be members of a topic called "*transport*". Similarly, you could have another topic, "*exercise*", that contains the words *run*, *marathon* and *train*. Notice that the word *train* can appear in more than one topic - it is a *homograph*, i.e. a word that is spelt the same but has a different meaning.
 
-The algorithm I'll demonstrate here is something called *Latent Dirichlet Allocation*. It works by looking at a collection of documents, and searching for terms that co-occur frequently. So, if the terms *cat* and *dog* appeared together in multiple documents, but rarely appeared on their own, the algorithm would identoify this and group them in to a topic.
+The algorithm I'll demonstrate here is something called *Latent Dirichlet Allocation*. It works by looking at a collection of documents, and searching for terms that co-occur frequently. So, if the terms *cat* and *dog* appeared together in multiple documents, but rarely appeared on their own, the algorithm would identify this and group them in to a topic. It also allows terms to be included in multiple topics, necessary if you have homograph's as shown above.
 
 A key feature of the algorithm is that it requires no information on the collection of documents being studied - it simply looks at the distribution of terms and groups them together in to as many topics as you specify up front. The output is then a list of terms for each topic, but with no labels - the algorithm doesn't know what a topic should be called, as it doesn't really care about the actual words used!
 
 To demonstrate, I've downloaded all of the official speeches published by No.10 during the coalition years (2010-2015) from data.gov (I used import.io for the data retrieval). There are over 400 speeches, covering a huge range of topics, and often multiple topics are discussed within a single speech.
 
-Below is a visualisation of the output of a 28 topic model run on the speeches. Before going any further, first set the slider at the top right of the visualisation to 0.6. This
+Click the image below to link to a visualisation of the output of a 28 topic model run on the speeches. *Before going any further, first set the slider at the top right of the visualisation to 0.6*. I'll explain why in a second.
+
+The plot on the left shows each of the topics reduced to their two main principal components - if you don't know what this means, don't worry, it's just a way of showing how similar two topics are, distilled down to two dimensions. So where the bubbles overlap, these topics should be quite similar.
+
+If you click on *Next Topic* at the top, the first topic should be highlighted. This changes the list of words to the right. Each word here is part of the topic, sorted by their importance to that particular topic. You might notice that some of the words look a little strange - *minist* for example. This is due to a process called *stemming* that I apply to the documents. This shortens words down to their root, so in the example above *minist* could have been *minister*, *ministers* or *ministerial*. The reason for this is that the topic model will not be able to identify that these words are all essentially talking about the same thing. Stemming allows us to gather similar words together, so that the topic model can do its thing more effectively.
+
+The first two topics are pretty dull - they contain very general terms used by the prime minister in his speeches. I have tried to clean some of these out, but this can be difficult. From topic 3 onwards things get pretty interesting.
+
+> As part of the data cleaning some of the most common words are removed, such as *and*, *the* etc. These **stopwords** don't contribute anything to the topic model due to their frequency across all the documents.
+
+Below is a table of some of the names for topics I've chosen. Remember, these names are **not** generated by the algorithm, but chosen by me manually afterwards by looking at the content of each topic.
+
+Why bother doing this?
+
+The relevance metric you adjusted at the start has an impact on the sorting of the terms. It is a weighting term, adjusting the relative frequency of a word in a topic as compared to in the whole collection of documents. You can see the difference by moving the slider to the extremes - when lambda is one, the most frequent terms in the topic are shown, whereas for lambda equal to zero those terms that are used mostly in this topic are weighted highest.

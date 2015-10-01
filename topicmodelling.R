@@ -18,12 +18,13 @@ corpus.clean <- tm::tm_map(corpus.clean, content_transformer(removeNumbers), laz
 corpus.clean <- tm::tm_map(corpus.clean, content_transformer(removeWords), stopwords('english'))
 corpus.clean <- tm::tm_map(corpus.clean, content_transformer(stripWhitespace), lazy = T)
 corpus.clean <- tm::tm_map(corpus.clean, content_transformer(removeWords), stopwords('english'))
+corpus.clean <- tm::tm_map(corpus.clean, stemDocument)
 
 dtm <- tm::DocumentTermMatrix(corpus.clean)
 
 # filter out low scoring tf-idf terms
 tfidf.scores <- colSums(as.matrix(tm::weightTfIdf(dtm)))
-dtm <- dtm[,tfidf.scores > quantile(tfidf.scores, 0.4)]
+dtm <- dtm[,tfidf.scores > quantile(tfidf.scores, 0.3)]
 
 # convert to matrix to allow row and column sums to be calculated
 td.mat <- as.matrix(dtm)
@@ -39,14 +40,6 @@ term.frequency <- colSums(td.mat)
 vocab <- tm::Terms(dtm)
 
 
-# jensenShannon <- function(x, y) {
-#   m <- 0.5*(x + y)
-#   0.5*sum(x*log(x/m)) + 0.5*sum(y*log(y/m))
-# }
-# dist.mat <- proxy::dist(x = phi, method = jensenShannon)
-# dist.mat
-
-
 LDAvis.json <- LDAvis::createJSON(phi = phi,
                                   theta = theta,
                                   doc.length = doc.length,
@@ -54,6 +47,8 @@ LDAvis.json <- LDAvis::createJSON(phi = phi,
                                   term.frequency = term.frequency)
 
 LDAvis::serVis(LDAvis.json)
+
+save.image("image.RData")
 
 #rm(phi,theta,doc.length,term.frequency,vocab,not,lda,LDAvis.json,td.mat)
 #write.table(LDAvis.json[[1]],file = "topics.json")
