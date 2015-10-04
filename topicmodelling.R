@@ -48,7 +48,10 @@ LDAvis.json <- LDAvis::createJSON(phi = phi,
 
 LDAvis::serVis(LDAvis.json)
 
-save.image("image.RData")
+save(LDAvis.json, file = "ldavis.RData")
+
+#save.image("image.RData")
+#load("image.RData")
 
 #rm(phi,theta,doc.length,term.frequency,vocab,not,lda,LDAvis.json,td.mat)
 #write.table(LDAvis.json[[1]],file = "topics.json")
